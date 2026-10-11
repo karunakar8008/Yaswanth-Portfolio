@@ -1,48 +1,49 @@
 # CLAUDE.md — project context
 
-Personal portfolio for **Karunakar Gudipudi** (Senior .NET Full Stack Developer).
-React 19 + Vite 8, plain CSS, with an optional Claude-API recruiter chatbot.
+Personal portfolio for **Yaswanth Daruvuri** (Python Full-Stack Developer).
+React 19 + Vite 8 + optional Claude-API chatbot. **This is the IDE-themed, memoji-
+chatbot variant** — intentionally different from the two sister projects
+`portfolio` and `portfolio-aws` (which are a sleek Linear/Vercel style).
+
+## Design direction (do not blur the identity)
+- **IDE / code-editor aesthetic** — fixed file-tree sidebar nav, tab bar with the
+  three "traffic light" window dots, syntax-highlighted "code window" cards for
+  sections, a `git log` style experience view, a bento grid for skills, GitHub
+  README-style project cards, emerald status bar at the bottom.
+- **Palette:** GitHub dark (`#0d1117`), **emerald + cyan** accents, lots of per-tile
+  secondary colors (violet/amber/pink/sky/orange/lime/rose) in the bento.
+- **Type:** JetBrains Mono everywhere; Inter only for long-form body copy inside
+  cards.
+- **Chatbot = memoji** — an SVG character that **drops in from the top of the
+  screen** on a thin green rope, with a bouncy spring. Mouth animates while loading
+  / typing (`.memoji.speaking .mouth` keyframe). Speech bubble appears beside it;
+  past turns go into a compact history below.
 
 ## Commands
-- `npm run dev` — serves the site **and** the `/api/chat` endpoint (wired via a Vite
-  plugin in `vite.config.js`; no separate backend).
-- `npm run build` / `npm run preview` — production build / preview.
-- After editing `.env`, **restart the dev server** (Vite reads env at startup).
+- `npm run dev` — serves the site AND `/api/chat` (wired in `vite.config.js`).
+- `npm run build` / `npm run preview`.
+- After editing `.env`, **restart** the dev server.
 
 ## Where things live
-- **All visible content:** `src/data/content.js` (profile, summary, skills, experience,
-  featuredProjects, projects, certifications, education, chatbot). Edit here first.
-- **Chatbot knowledge:** `api/_resume-context.js` — a *separate* server-side copy of the
-  résumé. **Keep it in sync with `content.js`** when experience changes.
-- **Styles/theme:** `src/index.css` (CSS variables at top drive the whole look; accent
-  is indigo/violet).
-- **Motion:** `src/hooks.js` + `src/components/Motion.jsx` + `HeroCanvas.jsx` +
-  `AnimatedText.jsx`. App-level Lenis smooth-scroll is initialised in `App.jsx`.
+- **All visible content:** `src/data/content.js` (profile, about, skills, experience,
+  projects, certifications, education, chatbot).
+- **Chatbot knowledge:** `api/_resume-context.js` — separate server-side copy of the
+  résumé. Keep in sync with `content.js`.
+- **Styles/theme:** `src/index.css` — CSS variables at the top drive everything.
+- **Memoji character:** `src/components/Memoji.jsx` — inline SVG. Edit hair/skin/
+  shirt directly in the gradients + path data.
 
-## Design direction (owner's preference)
-- **Sleek premium, Linear/Vercel style, indigo/violet accent.** (Amber/gold was tried
-  and rejected.) Cinematic-but-subtle motion. The owner is **performance-sensitive.**
-
-## Important gotchas (learned the hard way)
-- **Motion is intentionally NOT gated on `prefers-reduced-motion`.** The owner's
-  environment reports `reduce`, which was silently disabling every animation. Do not
-  re-add reduced-motion gates that turn the experience off.
-- **Frame-driven animations only run when the document is visible/focused.** Embedded
-  preview panes report `visibilityState: "hidden"` and throttle rAF + freeze CSS
-  transitions — the site looks static there. Verify in a real, focused browser.
-- **Performance:** keep scroll-driven work cheap — no React state updates on scroll
-  (the progress bar updates a ref directly), the hero canvas is throttled to ~30fps /
-  dpr 1 and pauses off-screen, orbs are static. Lenis pauses when `document.hidden`.
-- **Chatbot API key:** needs a `sk-ant-api03-…` **personal** key with API billing.
-  A `sk-ant-usr-…` account token or a corporate-org key (network-policy 403) will NOT
-  work — the latter also fails from any deployed host. Key goes in `.env` locally and
-  in host env vars on deploy. Default model `claude-haiku-5-5`.
+## Chatbot API notes (same as sister projects)
+- Needs a **personal** `sk-ant-api03-…` key with API billing. A `sk-ant-usr-…`
+  account token or corporate-org key (network-policy 403) will NOT work.
+- Model is **hardcoded** to `claude-haiku-5-5` in `api/_handler.js` so a stray
+  `ANTHROPIC_MODEL` env var can't break it with a dotted/invalid id.
 
 ## Deploy
-Vercel (free Hobby plan) — auto-detects Vite, runs `/api/chat` as a function. Set
+Vercel (free Hobby) — auto-detects Vite, runs `/api/chat` as a function. Add
 `ANTHROPIC_API_KEY` in Vercel env. GitHub Pages can't run the chatbot backend.
 
 ## Still placeholder (owner to fill)
-LinkedIn/GitHub URLs in `content.js` `socials`, résumé PDF in `public/`, certification
-verify links. The two non-client featured projects (MuleSoft→Azure, API-as-MCP-server)
-were reconstructed from past sessions — keep internal/employer identifiers out.
+Résumé PDF in `public/`, LinkedIn URL (not yet in `socials` — the sidebar instead
+uses GitHub from `profile.github`). The memoji is a generic cartoon — if you want
+to style it to look more like Yaswanth, tweak the SVG in `Memoji.jsx`.

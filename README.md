@@ -1,18 +1,16 @@
-# Karunakar Gudipudi — Portfolio
+# yaswanth.dev — Portfolio
 
-A modern, **immersive** developer portfolio built with **React + Vite**, featuring an
-optional **AI recruiter assistant** powered by the Claude API.
+A **code-editor-themed** personal portfolio for Yaswanth Daruvuri (Python Full-Stack
+Developer). React + Vite, with a **memoji-style AI assistant** that drops down from the
+top of the screen with a bouncing avatar and animated mouth.
 
-**Sections:** Hero (interactive particle canvas) · Professional Summary (animated
-counters) · Skills (proficiency bars + filterable toolset) · Experience (expandable
-6-company timeline) · Featured work (your own builds) · Client projects (filter by
-domain) · Certifications · Education · Contact · AI chatbot.
+**Design:** laid out like an IDE — fixed file-tree sidebar for navigation, tabbed top
+bar with window dots, syntax-highlighted "code window" cards for sections, a terminal
+hero that types out commands, a bento-grid for skills, a `git log` style experience
+view, GitHub README-style project cards, and an emerald status bar.
 
-**Interactive layer:** momentum smooth-scrolling (Lenis), a cursor-reactive particle
-constellation in the hero, magnetic buttons, 3D-tilt cards, an infinite tech-stack
-marquee, scroll-triggered word-by-word text reveals, animated counters, a scroll
-progress bar, scrollspy nav, and ambient gradient glows. Dark/light theme toggle,
-fully responsive.
+**Palette:** GitHub-ish dark (`#0d1117`), emerald + cyan accents, JetBrains Mono
+throughout.
 
 ---
 
@@ -23,84 +21,61 @@ npm install
 npm run dev
 ```
 
-Open the URL it prints (usually http://localhost:5173). `npm run dev` serves **both**
-the site and the chatbot API (`/api/chat`) — no separate backend process.
+Opens on http://localhost:5173 (or next free port). `npm run dev` serves **both** the
+site and the chatbot API (`/api/chat`) — no separate backend process needed.
 
 ```bash
 npm run build     # production build into /dist
 npm run preview   # preview the production build
 ```
 
-> **Heads-up on motion:** animations are frame-driven, so they only run when the
-> browser tab/window is **visible and focused**. Embedded preview panes (e.g. an IDE
-> or app preview) report the document as "hidden" and **throttle animations** — open
-> the site in a real, focused browser window to see the full experience.
+## 2. Turn on the AI assistant (optional)
 
-## 2. The AI chatbot (optional)
+The memoji chatbot calls the Claude API through a serverless function so your API key
+stays server-side, never in the browser.
 
-The chatbot calls the Claude API through a serverless function (`/api/chat`) so your
-API key stays server-side, never in the browser.
-
-1. Get a key at <https://console.anthropic.com> → **API Keys** (must start with
-   `sk-ant-api03-`; a `sk-ant-usr-…` account token will NOT work).
-2. Put it in `.env` (copy from `.env.example`):
+1. Get a **personal** key at <https://console.anthropic.com> → **API Keys**
+   (must start with `sk-ant-api03-`; a `sk-ant-usr-…` token won't work).
+2. Copy `.env.example` to `.env` and paste your key:
    ```
    ANTHROPIC_API_KEY=sk-ant-api03-...
    ```
 3. Restart `npm run dev`.
 
-Until a valid key is set, the chatbot still opens — it just shows a friendly
-"not configured" message. The rest of the site works fully without it.
-
-**Model / cost:** defaults to `claude-haiku-5-5` (a fraction of a cent per question).
-Override with `ANTHROPIC_MODEL=claude-opus-5-5` for higher-quality answers. Guardrails
-cap response length, history, and per-message size.
-
-> ⚠️ **Corporate keys won't work for a public site.** A work-org Anthropic key may be
-> restricted by a network policy (403 "Access restricted by network policy") and will
-> be blocked from any non-allowlisted network — including a deployed host. Use a
-> **personal** Anthropic account's key for a public portfolio, or run the chatbot
-> without the API (see the free-assistant option — ask, it's a small swap).
+The chatbot defaults to **`claude-haiku-5-5`** (low cost). Change in `api/_handler.js`.
+Without a key, the chatbot still drops in — it just shows a friendly "something went
+wrong" message in the speech bubble.
 
 ## 3. Personalize the content
 
-Almost everything lives in **[`src/data/content.js`](src/data/content.js)**:
+Edit **[`src/data/content.js`](src/data/content.js)**:
 
 | What | Key |
 | --- | --- |
-| Name, role, taglines, summary, email, phone, résumé link | `profile` |
-| Social links (LinkedIn/GitHub) — **update the placeholder URLs** | `socials` |
-| Summary lead, stat counters, highlights, domains | `summary` |
-| Core-competency bars + full skill groups | `coreCompetencies`, `skillGroups` |
-| Experience (6 companies) | `experience` |
-| Featured work (your own builds) | `featuredProjects` |
-| Client projects | `projects` |
+| Name, role, taglines, email, phone, GitHub, résumé link | `profile` |
+| Hero stats | `heroStats` |
+| About (Python class) highlights + domains | `about` |
+| Skills bento tiles (category + items + accent color) | `skillGroups` |
+| Experience (git-log commits) | `experience` |
+| Projects (README cards) | `projects` |
 | Certifications / Education | `certifications`, `education` |
-| Chatbot greeting + suggested questions | `chatbot` |
+| Chatbot greeting + suggested questions + avatar name | `chatbot` |
 
-**Keep the chatbot in sync:** it answers from a *separate* server-side copy of your
-résumé in [`api/_resume-context.js`](api/_resume-context.js). Update that file too when
-your experience changes.
+The chatbot answers from a *separate* server-side copy in
+[`api/_resume-context.js`](api/_resume-context.js). Keep it in sync.
 
 Quick tweaks:
-- **Accent color / theme:** CSS variables at the top of [`src/index.css`](src/index.css)
-  (`--accent`, `--accent-strong`, surfaces, borders).
-- **Résumé download:** drop `resume.pdf` into `public/` and set `profile.resumeUrl = "/resume.pdf"`.
-- **Favicon:** [`public/favicon.svg`](public/favicon.svg) (a "KG" monogram).
+- **Accent colors:** CSS variables at the top of [`src/index.css`](src/index.css)
+  (`--emerald`, `--cyan`, and per-tile `.accent-*` classes).
+- **Favicon:** [`public/favicon.svg`](public/favicon.svg) (a `</>` bracket mark).
+- **Memoji look:** [`src/components/Memoji.jsx`](src/components/Memoji.jsx) is an
+  inline SVG character — edit hair, shirt color, skin tone, etc. right there.
 
 ## 4. Deploy (free) — Vercel recommended
 
-GitHub stores the code; it doesn't host a running site by itself. Connect a host:
-
-1. Push this folder to a GitHub repo.
-2. On <https://vercel.com> (free **Hobby** plan) → **Add New Project** → import the
-   repo. It auto-detects Vite and runs `/api/chat` as a serverless function.
-3. **Settings → Environment Variables** → add `ANTHROPIC_API_KEY` (and optionally
-   `ANTHROPIC_MODEL`) if using the AI chatbot. Redeploy.
-4. You get a public URL; every `git push` auto-redeploys.
-
-> Netlify / Cloudflare Pages also work (functions supported). **GitHub Pages** can host
-> the static site but **not** the chatbot backend.
+1. Push to a GitHub repo.
+2. On <https://vercel.com> (free Hobby plan) → **Add New Project** → import → Deploy.
+3. In **Settings → Environment Variables**, add `ANTHROPIC_API_KEY`. Redeploy.
 
 ## Project structure
 
@@ -112,17 +87,16 @@ api/
 src/
   data/content.js     ← ALL site content (edit this)
   components/
-    Navbar, Hero, HeroCanvas (particle constellation), Summary, Skills,
-    Experience, FeaturedProjects, Projects, Certifications, Education, Contact,
-    Footer, Chatbot, SectionHead, AnimatedText (word reveals),
-    Motion (ScrollProgress, ParallaxOrbs, TiltCard, Magnetic), Icons
-  hooks.js            ← theme, reveal, scrollspy, count-up, parallax, tilt, magnetic
+    TopBar (tabs + window dots), Sidebar (file tree), StatusBar,
+    TerminalHero (typed shell), CodeWindow (section wrapper), About (Python class),
+    Skills (bento grid), Experience (git log), Projects (README cards), Contact,
+    Memoji (SVG avatar), MemojiChat (dropping chatbot UI), Icons
+  hooks.js            ← reveal, scrollspy, live clock
   index.css           ← theme variables + all styles
-  App.jsx             ← layout + Lenis smooth-scroll init
-  main.jsx
-vite.config.js        ← serves /api/chat in local dev (shared handler)
+  App.jsx / main.jsx
+vite.config.js        ← serves /api/chat in local dev
 ```
 
 ## Tech
-React 19 · Vite 8 · Lenis (smooth scroll) · `@anthropic-ai/sdk` (chatbot) · plain CSS
-(no UI framework) · zero-dependency inline SVG icons and canvas.
+React 19 · Vite 8 · `@anthropic-ai/sdk` (chatbot) · plain CSS · inline SVG icons &
+memoji — no UI framework, no icon package.

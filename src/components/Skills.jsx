@@ -1,26 +1,26 @@
-import CodeWindow from "./CodeWindow";
+import Section from "./Section";
 import { skillGroups } from "../data/content";
 
-/* Skills as a bento grid; each tile is one category themed by its own accent. */
 export default function Skills() {
   return (
-    <CodeWindow id="skills" filename="skills.yaml" language="yaml">
-      <div className="bento">
+    <Section
+      id="skills"
+      eyebrow="Skills"
+      title="What I work with"
+      lead="A grounded toolkit I reach for across the stack — plus the AI tooling I've been exploring lately."
+    >
+      <div className="skills-grid">
         {skillGroups.map((g) => (
-          <div className={`bento-tile accent-${g.accent}`} key={g.category}>
-            <div className="bento-head">
-              <span className="bento-key">{g.category.toLowerCase().replace(/\s+/g, "_")}:</span>
-            </div>
-            <div className="bento-tags">
+          <div className="skill-card" key={g.category}>
+            <h3>{g.category}</h3>
+            <div className="skill-tags">
               {g.items.map((item) => (
-                <span className="chip" key={item}>
-                  {item}
-                </span>
+                <span className="tag" key={item}>{item}</span>
               ))}
             </div>
           </div>
         ))}
       </div>
-    </CodeWindow>
+    </Section>
   );
 }

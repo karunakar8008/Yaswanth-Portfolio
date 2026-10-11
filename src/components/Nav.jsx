@@ -20,7 +20,7 @@ export default function Nav() {
     <nav className="nav">
       <a href="#home" className="nav-logo">
         <span className="dot" aria-hidden="true" />
-        {profile.name.split(" ")[0].toLowerCase()}.
+        {profile.name.split(" ")[0].toUpperCase()}
       </a>
       <ul className={`nav-links ${open ? "open" : ""}`}>
         {LINKS.map((l) => (

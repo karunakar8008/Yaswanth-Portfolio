@@ -42,9 +42,6 @@ export default function Hero({ onOpenChat }) {
     <section id="home" className="hero">
       <div className="hero-grid">
         <div className="hero-copy">
-          <span className="eyebrow">
-            <span className="dot" /> available for new roles
-          </span>
           <h1 className="headline">
             Hi, I'm <span className="accent">{profile.name.split(" ")[0]}</span> —
             I build <em className="rotating">{specialty}</em>
